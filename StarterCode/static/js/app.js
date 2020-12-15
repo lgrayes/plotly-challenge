@@ -1,6 +1,9 @@
 // Use D3 fetch to read the JSON file
 
 d3.json("samples.json", function(error, data) {
+    console.log(data);
+});
+{
 
 // Sort the data by Greek search results
 var sortedBySampleValues = data.sort((a, b) => b.sample_values - a.sample_values);

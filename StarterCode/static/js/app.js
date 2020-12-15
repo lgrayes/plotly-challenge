@@ -1,48 +1,55 @@
 // Use D3 fetch to read the JSON file
 
-function readJSON(data){
-  console.log(data);
+d3.json("samples.json", function(error, data) {
+
+  console.log(samples);
+    
+  if (error) {
+      return console.warn(error);
+  }
+
+  d3.select("body")
+          .selectAll("well")
+          .data(data)
+          .enter()
+          .append("p")
+          .text(function(d) {
+              return d.samples.otu_ids + ", " + d.samples.sample_values;
+          });
+  });
+
+function unpack(rows, index) {
+  return rows.map(function(row) {
+    return row[index];
+  });
 }
 
-d3.json("samples.json").then(readJSON);
+/*
 
-const dataPromise = d3.json(samples.json);
-console.log("Data Promise:", dataPromise);
+NEED TO CHANGE OPTIONS TO SEE WHICH WORKS FOR THE GRAPHS
 
-// Sort the data by Greek search results
-var sortedBySampleValues = data.sort((a, b) => b.sample_values - a.sample_values);
+GET DATA
 
-// Slice the first 10 objects for plotting
-slicedData = sortedBySampleValues.slice(0, 10);
+samples.samples.id
+samples.samples.otu_ids
+samples.samples.sample_values
+samples.samples.otu_labels
 
-// Reverse the array to accommodate Plotly's defaults
-reversedData = slicedData.reverse();
+"samples":[{
+    "id": "940", 
+    "otu_ids": [1167, 2859, 2, 2264, 41, 1189, 357, 342], 
+    "sample_values": [163, 126, 2, 2], 
+    "otu_labels": ["Bac
 
-// Trace1 for the json/samples/id/otu_ids
-var trace1 = {
-  x: reversedData.map(object => object.sample_values),
-  y: reversedData.map(object => object.otu_ids),
-  text: reversedData.map(object => object.otu_labels),
-  name: "OTU",
-  type: "bar",
-  orientation: "h"
-};
+UNPACK
 
-// data
-var data = [trace1];
+var dates = unpack(data.dataset.data, 0);
 
-// Apply the group bar mode to the layout
-var layout = {
-  title: "OTUs search results",
-  margin: {
-    l: 100,
-    r: 100,
-    t: 100,
-    b: 100
-  }
-};
+is this what you use to unpack the names array of samples.json?
 
-// Render the plot to the div tag with id "plot"
-Plotly.newPlot("plot", data, layout);
-  });
-  
+
+CREATE TRACE
+
+
+
+*/

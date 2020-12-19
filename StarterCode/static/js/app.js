@@ -1,28 +1,86 @@
-// Use D3 fetch to read the JSON file
+/*
+BIG PICTURE
 
-d3.json("samples.json", function(error, data) {
+- LOAD NAMES ARRAY TO DROP DOWN
+-- use DATA PROMISE, as names array loads, the rest of the fields are loading - is this what data promise means?
 
-  console.log(samples);
-    
-  if (error) {
-      return console.warn(error);
+- WHATEVER YOU SELECT IN DROP DOWN MENU, MATCH NUMBER IN METADATA ARRAY TO GET VALUES FOR GRAPHS
+-- use FUNCTION method
+
+- GAUGE IS OPTIONAL
+*/
+
+// **********************
+// 1: USE D3 TO FETCH AND READ THE JSON FILE
+// **********************
+
+// Fetch the JSON data and console log it
+d3.json(samples.json).then(function(data) {
+
+  console.log(data);
+
+  var selection = Object.keys(data);
+
+  console.log(selection);
+
+  var names = data.names;
+  var samples = data.samples;
+
+  let options = {};
+
+  let selectedName = {};
+
+  for (let i = 0; i < samples.length; i++) {
+    if (options === samples[i].id) {
+      selectedName = samples[i];
+    }
   }
+  function data
+  // pick up info here
+};
 
-  d3.select("body")
-          .selectAll("well")
-          .data(data)
-          .enter()
-          .append("p")
-          .text(function(d) {
-              return d.samples.otu_ids + ", " + d.samples.sample_values;
-          });
-  });
+// Does this go inside?
 
-function unpack(rows, index) {
-  return rows.map(function(row) {
-    return row[index];
-  });
-}
+console.log("Names array selection");
+console.log(selection);
+
+
+// Promise Pending
+const dataPromise = d3.json(url);
+console.log("Data Promise: ", dataPromise);
+
+
+// **********************
+// 2. 
+// **********************
+
+// **********************
+// 3.
+// **********************
+
+// **********************
+// 4.
+// **********************
+
+// **********************
+// 
+// **********************
+
+// **********************
+// 
+// **********************
+
+// **********************
+// 
+// **********************
+
+// **********************
+// 
+// **********************
+
+// **********************
+// 
+// **********************
 
 /*
 

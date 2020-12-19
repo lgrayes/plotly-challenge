@@ -59,11 +59,11 @@ function init() {
 // HORIZONTAL BAR GRAPH
 // **********************
 
-// Call updatePlotly() when a selection is made
-d3.selectAll("#selDataset").on("change", updatePlotly);
+// Change bar graph when a selection is made and update its values
+d3.selectAll("#selDataset").on("change", updateBarGraph);
 
 // This function is called when a dropdown menu item is selected
-function updatePlotly() {
+function updateBarGraph() {
 
   // Use D3 to select the dropdown menu
   var dropdownMenu = d3.select("#selDataset");
@@ -107,6 +107,15 @@ function updatePlotly() {
 
   // Render the plot to the div tag with id "plot"
   Plotly.newPlot("plot", chartData, layout);
-});
+};
+
+// **********************
+// BUBBLES
+// **********************
+
+// **********************
+// OPTIONAL: GAUGE
+// **********************
+
 
 init();

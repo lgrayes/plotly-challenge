@@ -11,7 +11,7 @@ BIG PICTURE
 */
 
 // **********************
-// 1: USE D3 TO FETCH AND READ THE JSON FILE
+// USE D3 TO FETCH AND READ THE JSON FILE
 // **********************
 
 // Fetch the JSON data and console log it
@@ -44,6 +44,18 @@ BIG PICTURE
   console.log(metaDataSelected);
 
 // **********************
+// INITIALIZE PAGE WITH ID940 VALUES
+// **********************
+
+// Initializes the page with a default plot
+function init() {
+  return selectedName === 940;
+
+  Plotly.newPlot("plot", metaDataSelected);
+}
+
+
+// **********************
 // HORIZONTAL BAR GRAPH
 // **********************
 
@@ -70,7 +82,7 @@ function updatePlotly() {
   // Reverse the array due to Plotly's defaults
   data = data.reverse();
 
-  // Trace1 for the Greek Data
+  // Trace1 for the SAMPLE VALUES Data
   var trace1 = {
     x: data.map(row => row.sample_values),
     y: data.map(row => row.otu_ids),
@@ -96,3 +108,5 @@ function updatePlotly() {
   // Render the plot to the div tag with id "plot"
   Plotly.newPlot("plot", chartData, layout);
 });
+
+init();

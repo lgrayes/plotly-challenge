@@ -15,99 +15,73 @@ BIG PICTURE
 // **********************
 
 // Fetch the JSON data and console log it
-d3.json(samples.json).then(function(data) {
+  d3.json("samples.json").then((importedData) => {
 
-  console.log(data);
+  console.log(importedData);
 
-  var selection = Object.keys(data);
+  var data = importedData;
 
-  console.log(selection);
+  var optionsNames = Object.keys(data);
+
+  console.log(optionsNames);
 
   var names = data.names;
   var samples = data.samples;
 
-  let options = {};
+  let metaDataSelected = {};
 
   let selectedName = {};
 
   for (let i = 0; i < samples.length; i++) {
-    if (options === samples[i].id) {
-      selectedName = samples[i];
+    if (selectedName === samples[i].id) {
+      metaDataSelected = samples[i];
     }
-  }
-  function data
-  // pick up info here
 };
 
 // Does this go inside?
-
-console.log("Names array selection");
-console.log(selection);
-
-
-// Promise Pending
-const dataPromise = d3.json(url);
-console.log("Data Promise: ", dataPromise);
-
+  console.log("Names array selection");
+  console.log(selectedName);
+  console.log(metaDataSelected);
 
 // **********************
-// 2. 
+// HORIZONTAL BAR GRAPH
 // **********************
 
-// **********************
-// 3.
-// **********************
+// Sort the data array using the greekSearchResults value
+  data.sort(function(a, b) {
+    return parseFloat(b.greekSearchResults) - parseFloat(a.greekSearchResults);
+  });
 
-// **********************
-// 4.
-// **********************
+  // Slice the first 10 objects for plotting
+  data = data.slice(0, 10);
 
-// **********************
-// 
-// **********************
+  // Reverse the array due to Plotly's defaults
+  data = data.reverse();
 
-// **********************
-// 
-// **********************
+  // Trace1 for the Greek Data
+  var trace1 = {
+    x: data.map(row => row.greekSearchResults),
+    y: data.map(row => row.greekName),
+    text: data.map(row => row.greekName),
+    name: "Greek",
+    type: "bar",
+    orientation: "h"
+  };
 
-// **********************
-// 
-// **********************
+  // data
+  var chartData = [trace1];
 
-// **********************
-// 
-// **********************
+  // Apply the group bar mode to the layout
+  var layout = {
+    title: "Greek gods search results",
+    margin: {
+      l: 100,
+      r: 100,
+      t: 100,
+      b: 100
+    }
+  };
 
-// **********************
-// 
-// **********************
-
-/*
-
-NEED TO CHANGE OPTIONS TO SEE WHICH WORKS FOR THE GRAPHS
-
-GET DATA
-
-samples.samples.id
-samples.samples.otu_ids
-samples.samples.sample_values
-samples.samples.otu_labels
-
-"samples":[{
-    "id": "940", 
-    "otu_ids": [1167, 2859, 2, 2264, 41, 1189, 357, 342], 
-    "sample_values": [163, 126, 2, 2], 
-    "otu_labels": ["Bac
-
-UNPACK
-
-var dates = unpack(data.dataset.data, 0);
-
-is this what you use to unpack the names array of samples.json?
-
-
-CREATE TRACE
-
-
-
-*/
+  // Render the plot to the div tag with id "plot"
+  Plotly.newPlot("plot", chartData, layout);
+});

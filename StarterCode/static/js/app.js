@@ -47,9 +47,21 @@ BIG PICTURE
 // HORIZONTAL BAR GRAPH
 // **********************
 
+// Call updatePlotly() when a selection is made
+d3.selectAll("#selDataset").on("change", updatePlotly);
+
+// This function is called when a dropdown menu item is selected
+function updatePlotly() {
+
+  // Use D3 to select the dropdown menu
+  var dropdownMenu = d3.select("#selDataset");
+
+  // Assign the value of the dropdown menu option to a variable
+  var dataset = dropdownMenu.property("value");
+
 // Sort the data array using the greekSearchResults value
   data.sort(function(a, b) {
-    return parseFloat(b.greekSearchResults) - parseFloat(a.greekSearchResults);
+    return parseFloat(b.sample_values) - parseFloat(a.sample_values);
   });
 
   // Slice the first 10 objects for plotting
@@ -60,10 +72,9 @@ BIG PICTURE
 
   // Trace1 for the Greek Data
   var trace1 = {
-    x: data.map(row => row.greekSearchResults),
-    y: data.map(row => row.greekName),
-    text: data.map(row => row.greekName),
-    name: "Greek",
+    x: data.map(row => row.sample_values),
+    y: data.map(row => row.otu_ids),
+    text: data.map(row => row.otu_labels),
     type: "bar",
     orientation: "h"
   };
@@ -73,7 +84,7 @@ BIG PICTURE
 
   // Apply the group bar mode to the layout
   var layout = {
-    title: "Greek gods search results",
+    title: "OTU LABELS",
     margin: {
       l: 100,
       r: 100,

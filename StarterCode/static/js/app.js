@@ -60,60 +60,49 @@ function init() {
 init();
 
 // **********************
+// WHEN SELECTION IS MADE AT THE DROPDOWN
+// **********************
+
+function optionChanged(newSample) {
+
+     buildPlot(newSample);
+  };
+
+// **********************
 // HORIZONTAL BAR GRAPH
 // **********************
 
-// Change bar graph when a selection is made and update its values
-d3.selectAll("#selDataset").on("change", updateBarGraph);
+function buildPlot(sample) {
 
-// This function is called when a dropdown menu item is selected
-function updateBarGraph() {
+  d3.json("samples.json").then((data) => {
+  
+      var samples = data.samples 
+      var filteredData = samples.filter(sampleID => sampleID.id === sample)[0]
+  
+      var sample_values = filteredData.sample_values;
+      var otu_ids = filteredData.otu_ids;
+      var otu_labels = filteredData.otu_labels;
+  
+      console.log(sample_values);
+      console.log(otu_ids);
+      console.log(otu_labels);
+  
+      let trace1 = {
+          x: sample_values,
+          y: otu_ids,
+          text: otu_labels,
+          type: 'bar',
+          orientation: 'h'
+      };
 
-  // Use D3 to select the dropdown menu
-  var dropdownMenu = d3.select("#selDataset");
-
-  // Assign the value of the dropdown menu option to a variable
-  var dataset = dropdownMenu.property("value");
-
-// Sort the data array using the greekSearchResults value
-  data.sort(function(a, b) {
-    return parseFloat(b.sample_values) - parseFloat(a.sample_values);
-  });
-
-  // Slice the first 10 objects for plotting
-  data = data.slice(0, 10);
-
-  // Reverse the array due to Plotly's defaults
-  data = data.reverse();
-
-  // Trace1 for the SAMPLE VALUES Data
-  var trace1 = {
-    x: data.map(row => row.sample_values),
-    y: data.map(row => row.otu_ids),
-    text: data.map(row => row.otu_labels),
-    type: "bar",
-    orientation: "h"
-  };
-
-  // data
-  var chartData = [trace1];
-
-  // Apply the group bar mode to the layout
-  var layout = {
-    title: "OTU LABELS",
-    xaxis: { title: "SAMPLE VALUES" },
-    yaxis: { title: "OTU IDs" },
-    margin: {
-      l: 100,
-      r: 100,
-      t: 100,
-      b: 100
-    }
-  };
-
-  // Render the plot to the div tag with id "plot"
-  Plotly.newPlot("plot", chartData, layout);
-};
+      let layout = {
+          xaxis: { title: "Sample Values" },
+          yaxis: { title: "OTU IDs" }
+      };
+      
+      Plotly.NewPlot("bar",trace1, layout);
+  }) 
+}
 
 // **********************
 // BUBBLES

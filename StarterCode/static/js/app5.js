@@ -15,49 +15,45 @@ BIG PICTURE
 // **********************
 
 // Fetch the JSON data and console log it
-d3.json("samples.json").then(function(data) {
-  
-  console.log(data);
+  d3.json("samples.json").then((importedData) => {
 
-});
+  console.log(importedData);
 
-const dataPromise = d3.json("samples.json");
-  
-console.log("Data Promise: ", dataPromise)
+  var data = importedData;
 
-  function unpack(rows, index) {
-  
-    return rows.map(function(row) {
+  var optionsNames = Object.keys(data);
 
-      return row[index];
+  console.log(optionsNames);
 
-  });
-}
+  var names = data.names;
+  var samples = data.samples;
 
+  let metaDataSelected = {};
+
+  let selectedName = {};
+
+  for (let i = 0; i < samples.length; i++) {
+    if (selectedName === samples[i].id) {
+      metaDataSelected = samples[i];
+    }
+};
+
+// Does this go inside?
+  console.log("Names array selection");
+  console.log(selectedName);
+  console.log(metaDataSelected);
 
 // **********************
-// INITIALIZE PAGE 
+// INITIALIZE PAGE WITH ID940 VALUES
 // **********************
 
+// Initializes the page with a default plot
 function init() {
+  return selectedName === 940;
 
-  var selector = d3.select("#selDataset");
-
-    d3.json("samples.json").then((data) => {
-  
-      var sampleIDNames = data.names;
-  
-      console.log("IDs ", sampleIDNames);
-  
-      sampleIDNames.forEach((sample) => {
-  
-        selector.append("option").text(sample).property("value");
-      })
-  
-      buildPlot(sampleIDNames[0]);
-  })
+  Plotly.newPlot("plot", metaDataSelected);
 }
-init();
+
 
 // **********************
 // HORIZONTAL BAR GRAPH
@@ -102,7 +98,7 @@ function updateBarGraph() {
   var layout = {
     title: "OTU LABELS",
     xaxis: { title: "SAMPLE VALUES" },
-    yaxis: { title: "OTU IDs" },
+    yaxis: { title: "OTU IDs" }
     margin: {
       l: 100,
       r: 100,
@@ -124,3 +120,4 @@ function updateBarGraph() {
 // **********************
 
 
+init();

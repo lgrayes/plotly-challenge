@@ -15,11 +15,11 @@ BIG PICTURE
 // **********************
 
 // Fetch the JSON data and console log it
-d3.json("samples.json").then(function(data) {
-  
-  console.log(data);
-
-});
+d3.json("samples.json").then(function(data) 
+    {
+      console.log(data);
+    }
+);
 
 const dataPromise = d3.json("samples.json");
   
@@ -36,26 +36,32 @@ console.log("Data Promise: ", dataPromise)
 
 
 // **********************
-// INITIALIZE PAGE 
+// LOAD NAMES ARRAY TO DROPDOWN
 // **********************
 
 function init() {
 
-  var selector = d3.select("#selDataset");
+  var dropdown = d3.select("#selDataset");
 
-    d3.json("samples.json").then((data) => {
+    d3.json("samples.json").then(function(data) 
+    {
+      data.names.forEach(function(name) 
+        {
+          dropdown.append("option").text(name).property("value");
+        }
+      );
   
-      var sampleIDNames = data.names;
+    //   var sampleIDNames = data.names;
   
-      console.log("IDs ", sampleIDNames);
+    //   console.log("IDs ", sampleIDNames);
   
-      sampleIDNames.forEach((sample) => {
+    //   sampleIDNames.forEach((sample) => {
   
-        selector.append("option").text(sample).property("value");
-      })
+    //     selector.append("option").text(sample).property("value");
+    //   })
   
-      buildPlot(sampleIDNames[0]);
-  })
+    //   buildBarPlot(sampleIDNames[0]);
+    })
 }
 init();
 
@@ -63,49 +69,75 @@ init();
 // WHEN SELECTION IS MADE AT THE DROPDOWN
 // **********************
 
-function optionChanged(newSample) {
+function optionChanged(id) {
 
-     buildPlot(newSample);
-  };
+  getPlot(id);
+  getInfo(id);
+};
 
 // **********************
 // HORIZONTAL BAR GRAPH
 // **********************
 
-function buildPlot(sample) {
+function getPlot(id) 
+{
+  d3.json("samples.json").then(function(data)
+  {
+    var samples = data.samples.filter(function(samplesdata)
+    {
+      return samplesdata.id === id;
+    }
+    )[0]
 
-  d3.json("samples.json").then((data) => {
-  
-      var samples = data.samples 
-      var filteredData = samples.filter(sampleID => sampleID.id === sample)[0]
-  
-      var sample_values = filteredData.sample_values;
-      var otu_ids = filteredData.otu_ids;
-      var otu_labels = filteredData.otu_labels;
-  
-      console.log(sample_values);
-      console.log(otu_ids);
-      console.log(otu_labels);
-  
-      let trace1 = {
-          x: sample_values,
-          y: otu_ids,
-          text: otu_labels,
-          type: 'bar',
-          orientation: 'h'
-      };
+    console.log(samples);
+    
+    // slice
+    var sampleValues = samples.sample_values.slice(0, 10).reverse();
 
-      let layout = {
-          xaxis: { title: "Sample Values" },
-          yaxis: { title: "OTU IDs" }
-      };
-      
-      Plotly.NewPlot("bar",trace1, layout);
-  }) 
+    var idValues = (samples.otu_ids.slice(0,10)).reverse();
+
+    var idOtu = idValues.map(function(datavalue)
+      {
+        return "OTU" + datavalue
+      }
+    )
+
+    console.log(`OTU IDS: ${idOtu}`)
+
+    // labels
+    var labels = samples.otu_labels.slice(0,10);
+
+    console.log(`Sample Values: ${sampleValues}`)
+    console.log(`ID Values: ${idValues}`)
+
+    // trace
+    var trace1 = 
+    {
+      x: sampleValues,
+      y: idOtu,
+      type: "bar",
+      orientation: "h",
+    };
+
+    // layout
+    var data1 = [trace1];
+
+    var layout1 = 
+    {
+      title: "Top 10 OTU",
+      yaxis:
+      {
+        tickmode: "linear",
+      }
+    };
+
+    Plotly.newPlot("bar", data1, layout1);
+  }
+  )
 }
 
 // **********************
-// BUBBLES
+// BUBBLES - trace2
 // **********************
 
 // **********************
